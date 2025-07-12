@@ -30,7 +30,8 @@ const LandingPage = ({ onNavigate }) => {
         };
       } else {
         payload = {
-          username: formData.email,
+          username: formData.name,
+          email: formData.email,
           password: formData.password,
         };
       }
