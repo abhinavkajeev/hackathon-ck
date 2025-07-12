@@ -41,7 +41,11 @@ router.post("/signup", async (req, res) => {
     await user.save();
     res.status(201).json({ message: "User signed up successfully" });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    if (err.code === 11000) {
+      res.status(400).json({ error: "User already exists" });
+    } else {
+      res.status(400).json({ error: err.message });
+    }
   }
 });
 
