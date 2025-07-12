@@ -49,7 +49,9 @@ const LandingPage = ({ onNavigate }) => {
         throw new Error(data.error || data.message || "Authentication failed");
       }
       setLoading(false);
-      if (onNavigate) {
+      if (isLogin && onNavigate) {
+        onNavigate("start", { username: data.username });
+      } else if (onNavigate) {
         onNavigate("dashboard", data.user || data);
       }
       setShowLoginModal(false);
