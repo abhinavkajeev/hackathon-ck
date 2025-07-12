@@ -23,7 +23,7 @@ const LandingPage = ({ onNavigate }) => {
     setLoading(true);
     try {
       const endpoint = isLogin ? '/login' : '/signup';
-      const response = await fetch(`http://localhost:5000${endpoint}`, {
+      const response = await fetch(`http://localhost:7000${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
