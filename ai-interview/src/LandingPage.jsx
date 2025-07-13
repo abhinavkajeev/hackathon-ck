@@ -27,6 +27,7 @@ const LandingPage = ({ onNavigate }) => {
       if (isLogin) {
         payload = {
           username: formData.email,
+          email: formData.email,
           password: formData.password,
         };
       } else {
@@ -347,14 +348,14 @@ const LandingPage = ({ onNavigate }) => {
           animate={{ scale: 1, opacity: 0.1 }}
           transition={{ duration: 2, delay: 1 }}
           className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow"
-          style={{ animationDelay: '1s' }}
+          style={{ animationDelay: "1s" }}
         />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.1 }}
           transition={{ duration: 2, delay: 1.5 }}
           className="absolute top-1/2 left-1/2 w-64 h-64 bg-green-500/10 rounded-full blur-3xl animate-pulse-slow"
-          style={{ animationDelay: '2s' }}
+          style={{ animationDelay: "2s" }}
         />
       </div>
 
@@ -377,7 +378,7 @@ const LandingPage = ({ onNavigate }) => {
             </div>
             <span className="text-xl font-semibold">InterviewAI</span>
           </motion.div>
-          
+
           <motion.nav
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -397,7 +398,7 @@ const LandingPage = ({ onNavigate }) => {
               </motion.a>
             ))}
           </motion.nav>
-          
+
           <motion.button
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

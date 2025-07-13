@@ -19,8 +19,11 @@ router.post("/register", async (req, res) => {
 // Login
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const { username, email, password } = req.body;
+    // Find user by username or email
+    const user = await User.findOne({
+      $or: [{ username: username }, { email: email }],
+    });
     if (!user) return res.status(400).json({ error: "Invalid credentials" });
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
