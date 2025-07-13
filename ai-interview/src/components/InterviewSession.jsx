@@ -43,7 +43,7 @@ const InterviewSession = ({
 
     setEvaluating(true);
     try {
-      const res = await fetch("http://localhost:7000/api/interview/evaluate", {
+      const res = await fetch("http://localhost:3000/api/interview/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
