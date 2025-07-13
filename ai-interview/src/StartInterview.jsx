@@ -39,6 +39,10 @@ const StartInterview = ({
   const [preparationTime, setPreparationTime] = useState(30);
   const [preparationStarted, setPreparationStarted] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const [evaluating, setEvaluating] = useState(false);
+  const [history, setHistory] = useState([]);
+
 
   // Sample questions based on role and level
   const questionSets = {
@@ -166,21 +170,24 @@ const StartInterview = ({
     onStartInterview && onStartInterview();
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
+  await handleEvaluateAnswer(); // 🔥 evaluate before going next
+
+  setTimeout(() => {
     if (currentQuestion < currentQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setUserAnswer("");
+      setFeedback(null); // reset feedback for next question
       setTimeLeft(120);
     } else {
-      // Interview complete
-      onNavigate &&
-        onNavigate("results", {
-          score: Math.floor(Math.random() * 40) + 60,
-          feedback:
-            "Great job! You showed strong communication skills and relevant experience. Consider providing more specific examples in your responses.",
-        });
+      onNavigate("results", {
+        score: Math.floor(Math.random() * 40) + 60,
+        feedback: "Great job!",
+      });
     }
-  };
+  }, 2000);
+};
+
 
   const handleSkipQuestion = () => {
     handleNextQuestion();
@@ -189,6 +196,31 @@ const StartInterview = ({
   const toggleRecording = () => {
     setIsRecording(!isRecording);
   };
+const handleEvaluateAnswer = async () => {
+  if (!userAnswer.trim()) return;
+
+  setEvaluating(true);
+  try {
+    const res = await fetch("http://localhost:7000/api/interview/evaluate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question: currentQuestions[currentQuestion],
+        userAnswer: userAnswer,
+      }),
+    });
+
+    const data = await res.json();
+    console.log("🎯 AI Feedback:", data);
+    setFeedback(data);
+  } catch (err) {
+    console.error("❌ Error evaluating answer:", err);
+  } finally {
+    setEvaluating(false);
+  }
+};
+
+
 
   // Pre-interview setup screen
   if (!preparationStarted && !interviewStarted) {
@@ -537,6 +569,22 @@ const StartInterview = ({
               placeholder="Type your response here..."
               className="w-full h-32 p-4 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:border-gray-500 transition-colors resize-none"
             />
+            {evaluating && (
+            <div className="text-sm text-yellow-400 mt-2">Evaluating your answer...</div>
+            )}
+            {/* PLACE THIS RIGHT BELOW TEXTAREA */}
+            {feedback && (
+              <div className="bg-gray-900 p-4 rounded-xl border border-gray-700 mb-6">
+                <h4 className="text-lg font-medium text-white mb-2">AI Feedback</h4>
+                <p className="text-sm text-gray-300 mb-1"><strong>Score:</strong> {feedback.score}/10</p>
+                <p className="text-sm text-gray-300 mb-2"><strong>Comment:</strong> {feedback.feedback}</p>
+                <ul className="list-disc list-inside text-sm text-gray-400">
+                  {feedback.suggestions.map((tip, i) => (
+                    <li key={i}>{tip}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div className="text-right text-sm text-gray-400 mt-2">
               {userAnswer.length} characters
             </div>
