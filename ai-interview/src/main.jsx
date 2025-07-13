@@ -10,11 +10,13 @@ import {
 import "./index.css";
 import LandingPage from "./LandingPage.jsx";
 import StartInterview from "./StartInterview.jsx";
+import DashboardInterview from "./DashboardInterview.jsx";
 
 function AppRoutes() {
   const navigate = useNavigate();
   const location = useLocation();
   const user = location.state?.username || "";
+
   return (
     <Routes>
       <Route
@@ -27,7 +29,10 @@ function AppRoutes() {
           />
         }
       />
-      <Route path="/start" element={<StartInterview user={user} />} />
+      <Route 
+        path="/start" 
+        element={<StartInterview user={user} />} 
+      />
       <Route
         path="*"
         element={
@@ -37,6 +42,10 @@ function AppRoutes() {
             }
           />
         }
+      />
+      <Route 
+        path="/dashboard" 
+        element={<DashboardInterview user={user} />} 
       />
     </Routes>
   );
