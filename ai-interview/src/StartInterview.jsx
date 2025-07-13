@@ -18,6 +18,8 @@ import {
   Settings,
   CheckCircle,
   AlertCircle,
+  X,
+  Home,
 } from "lucide-react";
 
 const StartInterview = ({
@@ -28,6 +30,8 @@ const StartInterview = ({
   levelName,
   onNavigate,
   onStartInterview,
+  onExitInterview,
+  onCompleteInterview,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -39,6 +43,10 @@ const StartInterview = ({
   const [preparationTime, setPreparationTime] = useState(30);
   const [preparationStarted, setPreparationStarted] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
+  const [interviewComplete, setInterviewComplete] = useState(false);
+  const [finalScore, setFinalScore] = useState(null);
+  const [answers, setAnswers] = useState([]);
 
   // Sample questions based on role and level
   const questionSets = {
@@ -167,18 +175,53 @@ const StartInterview = ({
   };
 
   const handleNextQuestion = () => {
+    // Save current answer
+    const newAnswer = {
+      question: currentQuestions[currentQuestion],
+      answer: userAnswer.trim(),
+      timeSpent: 120 - timeLeft,
+    };
+    setAnswers(prev => [...prev, newAnswer]);
+
     if (currentQuestion < currentQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setUserAnswer("");
       setTimeLeft(120);
     } else {
       // Interview complete
-      onNavigate &&
-        onNavigate("results", {
-          score: Math.floor(Math.random() * 40) + 60,
-          feedback:
-            "Great job! You showed strong communication skills and relevant experience. Consider providing more specific examples in your responses.",
-        });
+      handleCompleteInterview();
+    }
+  };
+
+  const handleCompleteInterview = () => {
+    const score = Math.floor(Math.random() * 40) + 60; // Random score between 60-100
+    const feedback = generateFeedback(score);
+    
+    setFinalScore(score);
+    setInterviewComplete(true);
+    
+    // Call parent callback if provided
+    if (onCompleteInterview) {
+      onCompleteInterview({
+        score,
+        feedback,
+        answers,
+        role: selectedRole,
+        level: selectedLevel,
+        completedAt: new Date().toISOString(),
+      });
+    }
+  };
+
+  const generateFeedback = (score) => {
+    if (score >= 90) {
+      return "Excellent performance! You demonstrated strong technical knowledge and communication skills. Your responses were well-structured and showed deep understanding of the concepts.";
+    } else if (score >= 80) {
+      return "Great job! You showed solid understanding and good communication skills. Consider providing more specific examples to strengthen your responses.";
+    } else if (score >= 70) {
+      return "Good effort! You have a solid foundation. Focus on providing more detailed explanations and concrete examples from your experience.";
+    } else {
+      return "Keep practicing! Review the fundamental concepts and practice explaining technical topics clearly. Consider taking some time to prepare specific examples from your experience.";
     }
   };
 
@@ -189,6 +232,156 @@ const StartInterview = ({
   const toggleRecording = () => {
     setIsRecording(!isRecording);
   };
+
+  const handleExitInterview = () => {
+    setShowExitConfirmation(true);
+  };
+
+  const confirmExit = () => {
+    setShowExitConfirmation(false);
+    setInterviewStarted(false);
+    setPreparationStarted(false);
+    setCurrentQuestion(0);
+    setUserAnswer("");
+    setTimeLeft(120);
+    setAnswers([]);
+    
+    // Call parent callback if provided
+    if (onExitInterview) {
+      onExitInterview();
+    }
+    
+    // Navigate to dashboard
+    if (onNavigate) {
+      onNavigate("dashboard");
+    }
+  };
+
+  const cancelExit = () => {
+    setShowExitConfirmation(false);
+  };
+
+  const handleReturnToDashboard = () => {
+    if (onNavigate) {
+      onNavigate("dashboard");
+    }
+  };
+
+  // Interview completion screen
+  if (interviewComplete) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-95"></div>
+        
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto p-6 flex items-center justify-center min-h-screen">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-800 text-center max-w-2xl w-full"
+          >
+            <div className="w-20 h-20 bg-green-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <Trophy className="w-10 h-10 text-white" />
+            </div>
+            
+            <h2 className="text-3xl font-light mb-4">Interview Complete!</h2>
+            <p className="text-gray-400 mb-8">
+              Congratulations on completing your mock interview
+            </p>
+            
+            <div className="bg-gray-800/50 rounded-xl p-6 mb-8">
+              <div className="text-4xl font-bold text-green-400 mb-2">
+                {finalScore}%
+              </div>
+              <div className="text-sm text-gray-400 mb-4">Your Score</div>
+              <p className="text-gray-300 leading-relaxed">
+                {generateFeedback(finalScore)}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              <div className="text-center">
+                <div className="text-xl font-bold text-white mb-1">
+                  {currentQuestions.length}
+                </div>
+                <div className="text-sm text-gray-400">Questions</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl font-bold text-white mb-1">
+                  {answers.length}
+                </div>
+                <div className="text-sm text-gray-400">Answered</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl font-bold text-white mb-1">
+                  {Math.round(answers.reduce((acc, a) => acc + a.timeSpent, 0) / answers.length) || 0}s
+                </div>
+                <div className="text-sm text-gray-400">Avg Time</div>
+              </div>
+            </div>
+            
+            <div className="flex gap-4 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleReturnToDashboard}
+                className="bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-100 transition-all duration-300 flex items-center space-x-2"
+              >
+                <Home className="w-5 h-5" />
+                <span>Return to Dashboard</span>
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Exit confirmation modal
+  if (showExitConfirmation) {
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-gray-900 rounded-2xl p-8 border border-gray-800 max-w-md w-full mx-4"
+        >
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-red-400" />
+            </div>
+            <h3 className="text-xl font-medium text-white mb-2">Exit Interview?</h3>
+            <p className="text-gray-400 mb-6">
+              Are you sure you want to exit? Your progress will not be saved.
+            </p>
+            <div className="flex gap-3">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={cancelExit}
+                className="flex-1 px-4 py-3 rounded-full font-medium border border-gray-700 text-gray-300 hover:bg-gray-800 transition-all duration-300"
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={confirmExit}
+                className="flex-1 px-4 py-3 rounded-full font-medium bg-red-500 text-white hover:bg-red-600 transition-all duration-300"
+              >
+                Exit Interview
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   // Pre-interview setup screen
   if (!preparationStarted && !interviewStarted) {
@@ -211,7 +404,7 @@ const StartInterview = ({
           >
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => onNavigate("dashboard")}
+                onClick={handleReturnToDashboard}
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <ChevronLeft className="w-6 h-6" />
@@ -545,10 +738,11 @@ const StartInterview = ({
           {/* Action Buttons */}
           <div className="flex justify-between items-center">
             <button
-              onClick={() => onNavigate("dashboard")}
-              className="text-gray-400 hover:text-white transition-colors"
+              onClick={handleExitInterview}
+              className="text-gray-400 hover:text-white transition-colors flex items-center space-x-2"
             >
-              ← Exit Interview
+              <X className="w-4 h-4" />
+              <span>Exit Interview</span>
             </button>
 
             <div className="flex gap-3">

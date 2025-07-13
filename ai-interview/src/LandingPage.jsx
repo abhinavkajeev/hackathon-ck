@@ -2,6 +2,144 @@ import React, { useState, useMemo } from "react";
 import { Brain, ChevronDown, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 
+const About = () => (
+  <div className="text-center max-w-4xl mx-auto">
+    <motion.h2
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="text-4xl font-bold mb-6"
+    >
+      About InterviewAI
+    </motion.h2>
+    <motion.p
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="text-xl text-gray-400 mb-8"
+    >
+      We're revolutionizing interview preparation with cutting-edge AI technology.
+      Our platform provides personalized feedback, real-time analysis, and
+      comprehensive practice sessions to help you ace your next interview.
+    </motion.p>
+    <motion.div
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
+    >
+      {[
+        { title: "AI-Powered", desc: "Advanced algorithms analyze your performance" },
+        { title: "Real-time Feedback", desc: "Get instant insights and improvements" },
+        { title: "Industry Experts", desc: "Created by hiring professionals" },
+      ].map((item, index) => (
+        <div key={index} className="text-center">
+          <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+          <p className="text-gray-400">{item.desc}</p>
+        </div>
+      ))}
+    </motion.div>
+  </div>
+);
+
+// Mock Features Component
+const Features = () => (
+  <div className="text-center max-w-6xl mx-auto">
+    <motion.h2
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="text-4xl font-bold mb-6"
+    >
+      Powerful Features
+    </motion.h2>
+    <motion.p
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="text-xl text-gray-400 mb-12"
+    >
+      Everything you need to succeed in your interviews
+    </motion.p>
+    <motion.div
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+    >
+      {[
+        { title: "Mock Interviews", desc: "Practice with realistic scenarios" },
+        { title: "Performance Analytics", desc: "Track your progress over time" },
+        { title: "Custom Questions", desc: "Tailored to your industry" },
+        { title: "Video Recording", desc: "Review your body language" },
+        { title: "AI Coaching", desc: "Personalized improvement tips" },
+        { title: "Career Guidance", desc: "Expert advice for your path" },
+      ].map((feature, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: 30, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
+          className="p-6 rounded-lg border border-gray-800 hover:border-gray-700 transition-all duration-300"
+        >
+          <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+          <p className="text-gray-400">{feature.desc}</p>
+        </motion.div>
+      ))}
+    </motion.div>
+  </div>
+);
+
+// Mock Pricing Component
+const Pricing = () => (
+  <div className="text-center max-w-4xl mx-auto">
+    <motion.h2
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="text-4xl font-bold mb-6"
+    >
+      Choose Your Plan
+    </motion.h2>
+    <motion.p
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="text-xl text-gray-400 mb-12"
+    >
+      Start free, upgrade when you're ready
+    </motion.p>
+    <motion.div
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className="grid grid-cols-1 md:grid-cols-3 gap-8"
+    >
+      {[
+        { name: "Free", price: "$0", features: ["5 interviews/month", "Basic feedback", "Email support"] },
+        { name: "Pro", price: "$19", features: ["Unlimited interviews", "Advanced analytics", "Priority support"] },
+        { name: "Enterprise", price: "$49", features: ["Team management", "Custom integrations", "24/7 support"] },
+      ].map((plan, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: 30, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
+          className="p-6 rounded-lg border border-gray-800 hover:border-gray-700 transition-all duration-300"
+        >
+          <h3 className="text-xl font-semibold mb-3">{plan.name}</h3>
+          <div className="text-3xl font-bold mb-4">{plan.price}<span className="text-sm text-gray-400">/month</span></div>
+          <ul className="space-y-2 text-gray-400">
+            {plan.features.map((feature, idx) => (
+              <li key={idx}>• {feature}</li>
+            ))}
+          </ul>
+        </motion.div>
+      ))}
+    </motion.div>
+  </div>
+);
+
 const LandingPage = ({ onNavigate }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
@@ -67,6 +205,25 @@ const LandingPage = ({ onNavigate }) => {
       handleSubmit();
     }
   };
+
+  // Smooth scroll function
+  const smoothScrollTo = (elementId) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
+  // Navigation items with their corresponding section IDs
+  const navItems = [
+    { name: "Home", id: "home" },
+    { name: "Features", id: "features" },
+    { name: "Pricing", id: "pricing" },
+    { name: "About", id: "about" },
+  ];
 
   // Animated LoginModal
   const LoginModal = useMemo(
@@ -365,53 +522,55 @@ const LandingPage = ({ onNavigate }) => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
-          className="flex justify-between items-center px-8 py-6 border-b border-gray-800/50"
+          className="fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-b border-gray-800/50 z-40"
         >
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center space-x-3"
-          >
-            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-              <Brain className="w-5 h-5 text-black" />
-            </div>
-            <span className="text-xl font-semibold">InterviewAI</span>
-          </motion.div>
+          <div className="flex justify-between items-center px-8 py-6">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex items-center space-x-3"
+            >
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                <Brain className="w-5 h-5 text-black" />
+              </div>
+              <span className="text-xl font-semibold">InterviewAI</span>
+            </motion.div>
 
-          <motion.nav
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="hidden md:flex items-center space-x-8"
-          >
-            {["Home", "Features", "Pricing", "About"].map((item, index) => (
-              <motion.a
-                key={item}
-                href="#"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                {item}
-              </motion.a>
-            ))}
-          </motion.nav>
+            <motion.nav
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="hidden md:flex items-center space-x-8"
+            >
+              {navItems.map((item, index) => (
+                <motion.button
+                  key={item.name}
+                  onClick={() => smoothScrollTo(item.id)}
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                  className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  {item.name}
+                </motion.button>
+              ))}
+            </motion.nav>
 
-          <motion.button
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            onClick={() => setShowLoginModal(true)}
-            className="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 active:scale-95"
-          >
-            Get Started
-          </motion.button>
+            <motion.button
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              onClick={() => setShowLoginModal(true)}
+              className="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 active:scale-95"
+            >
+              Get Started
+            </motion.button>
+          </div>
         </motion.header>
 
         {/* Hero Section */}
-        <div className="container mx-auto px-8 py-20">
+        <section id="home" className="container mx-auto px-8 py-32 pt-40">
           <div className="text-center max-w-5xl mx-auto">
             <motion.div
               initial={{ y: 50, opacity: 0 }}
@@ -473,6 +632,7 @@ const LandingPage = ({ onNavigate }) => {
               </motion.button>
 
               <motion.button
+                onClick={() => smoothScrollTo('features')}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="border border-gray-700 text-white px-8 py-3 rounded-full font-medium hover:bg-gray-900 transition-all duration-300 transform hover:border-gray-600"
@@ -514,14 +674,29 @@ const LandingPage = ({ onNavigate }) => {
               </motion.div>
             ))}
           </motion.div>
-        </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="container mx-auto px-8 py-24">
+          <Features />
+        </section>
+
+        {/* Pricing Section */}
+        <section id="pricing" className="container mx-auto px-8 py-24">
+          <Pricing />
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="container mx-auto px-8 py-24">
+          <About />
+        </section>
 
         {/* Scroll Indicator */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 2.5 }}
-          className="absolute bottom-8 left-8 flex items-center gap-2 text-gray-400"
+          className="fixed bottom-8 left-8 flex items-center gap-2 text-gray-400"
         >
           <motion.div
             animate={{ y: [0, 5, 0] }}
@@ -529,7 +704,7 @@ const LandingPage = ({ onNavigate }) => {
           >
             <ChevronDown className="w-4 h-4" />
           </motion.div>
-          <span className="text-sm">01/03 · Scroll down</span>
+          <span className="text-sm">01/04 · Scroll down</span>
         </motion.div>
       </div>
 
