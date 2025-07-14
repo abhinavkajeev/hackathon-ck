@@ -30,7 +30,7 @@ import {
   Share2,
 } from "lucide-react";
 
-const Dashboard = ({ user, onNavigate, onStartInterview }) => {
+const DashboardInterview = ({ user, onNavigate, onStartInterview }) => {
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
@@ -709,5 +709,5 @@ const Dashboard = ({ user, onNavigate, onStartInterview }) => {
   );
 };
 
-export default Dashboard;
+export default DashboardInterview;
                     
