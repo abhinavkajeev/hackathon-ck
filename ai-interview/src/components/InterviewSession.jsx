@@ -270,7 +270,7 @@ const InterviewSession = ({
           handleFinishInterview();
         }
       },
-      feedback ? 30000 : 500
+      feedback ? 10000 : 10000
     );
   };
 
