@@ -176,7 +176,7 @@ const LandingPage = ({ onNavigate }) => {
         };
       }
       const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
-      const response = await fetch(`http://localhost:3000${endpoint}`, {
+      const response = await fetch(`https://hackathon-ck.vercel.app${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
