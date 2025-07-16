@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Timer, Play, CheckCircle } from "lucide-react";
 
 const InterviewPreparation = ({ onStartInterview }) => {
-  const [preparationTime, setPreparationTime] = useState(30);
+  const [preparationTime, setPreparationTime] = useState(10);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {

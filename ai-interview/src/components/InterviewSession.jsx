@@ -193,6 +193,15 @@ const InterviewSession = ({
       const data = await res.json();
       console.log("🎯 AI Feedback:", data);
       setFeedback(data);
+      setAllFeedbacks(prev => {
+        // Only add if not already added for this question
+        if (prev.length === currentQuestion) {
+          return [...prev, data];
+        } else {
+          // Replace if re-evaluated
+          return prev.map((fb, idx) => idx === currentQuestion ? data : fb);
+        }
+      });
     } catch (err) {
       console.error("❌ Error evaluating answer:", err);
     } finally {
@@ -395,7 +404,17 @@ const InterviewSession = ({
     );
   }
 
+  const [allFeedbacks, setAllFeedbacks] = useState([]); // Track all feedbacks
+
   if (isInterviewFinished) {
+    // Calculate overall marks and improvements
+    const totalScore = allFeedbacks.reduce((sum, fb) => sum + (fb?.score || 0), 0);
+    const avgScore = allFeedbacks.length > 0 ? (totalScore / allFeedbacks.length).toFixed(2) : 0;
+    // Gather all suggestions
+    const allSuggestions = allFeedbacks.flatMap(fb => fb?.suggestions || []);
+    // Remove duplicates
+    const uniqueSuggestions = Array.from(new Set(allSuggestions));
+
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
@@ -417,6 +436,29 @@ const InterviewSession = ({
             <h2 className="text-2xl font-light mb-2">Interview Completed!</h2>
             <p className="text-gray-400">Redirecting to dashboard...</p>
           </motion.div>
+
+          {/* Overall Section */}
+          <div className="bg-gray-900 p-6 rounded-xl border border-gray-700 mt-6 max-w-lg mx-auto">
+            <h3 className="text-xl font-medium text-white mb-4">Overall Results</h3>
+            <p className="text-lg text-gray-300 mb-2">
+              <strong>Average Score:</strong> {avgScore} / 10
+            </p>
+            <p className="text-lg text-gray-300 mb-4">
+              <strong>Total Questions:</strong> {allFeedbacks.length}
+            </p>
+            <div className="text-left">
+              <h4 className="text-lg font-medium text-white mb-2">Improvements Needed:</h4>
+              {uniqueSuggestions.length > 0 ? (
+                <ul className="list-disc list-inside text-sm text-gray-400">
+                  {uniqueSuggestions.map((tip, i) => (
+                    <li key={i}>{tip}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">No suggestions. Great job!</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );
